@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  jmetercontrolcenter:
+    build:
+      context: ./JMeterControlCenter
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+    command: sh -c './wait-for.sh postgres:5432 -t 100 -- ./start.sh'
+    environment:
+      JMCC_DB_USER: ${JMCC_DB_USER}
+      JMCC_DB_PASSWORD: ${JMCC_DB_PASSWORD}
+      JMCC_DB_NAME: ${JMCC_DB_NAME}
+      JMCC_DB_SERVER: postgres
+    container_name: JMeterControlCenter
+  postgres:
+    build:
+      context: ./Postgres
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: P@ssw0rd1
+      JMCC_DB_USER: ${JMCC_DB_USER}
+      JMCC_DB_PASSWORD: ${JMCC_DB_PASSWORD}
+      JMCC_DB_NAME: ${JMCC_DB_NAME}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:
