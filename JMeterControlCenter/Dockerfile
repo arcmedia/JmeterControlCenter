@@ -16,6 +16,7 @@ RUN pip install -r requirements.txt && \
 
 COPY ./settings.py ./jltc/settings.py
 COPY ./start.sh ./start.sh
-COPY wait-for.sh ./wait-for.sh
+COPY ./wait-for.sh ./wait-for.sh
 
 RUN chmod 777 ./wait-for.sh
+RUN chmod 777 ./start.sh
